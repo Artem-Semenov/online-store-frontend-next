@@ -5,7 +5,9 @@ import {
 	saveToStorage,
 	authEnum,
 } from "@/services/auth/auth.helper";
-import { IAuthResponse, IEmailPassword } from "@/store/user/user.interface";
+
+import { IAuthResponse, IEmailPassword } from "@/types/auth.interface";
+
 import axios from "axios";
 
 export const AuthService = {
@@ -32,5 +34,6 @@ export const AuthService = {
 		);
 
 		if (response.data.accessToken) saveToStorage(response.data);
+		return response;
 	},
 };
