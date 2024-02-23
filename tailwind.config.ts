@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
-const twColors = require("tailwindcss/colors")
+const twColors = require("tailwindcss/colors");
 const colors = {
 	transparent: twColors.transparent,
 	black: "#80838a",
@@ -8,8 +8,10 @@ const colors = {
 	priamry: "#ff9900",
 	secondary: "#161d25",
 	"bg-color": "#f2f2f5",
-	aqua: "#74afbb"
-}
+	aqua: "#74afbb",
+	red: twColors.red[400],
+	gray: "#CDCDCD",
+};
 
 module.exports = {
 	content: ["./src/**/*.{html,js,tsx}"],
@@ -30,32 +32,32 @@ module.exports = {
 				"6xl": "4.3rem",
 				"7xl": "5.17rem",
 				"8xl": "6.9rem",
-				"9xl": "9.2rem"
+				"9xl": "9.2rem",
 			},
 			keyframes: {
 				animationOpacity: {
 					from: { opacity: 0.2 },
-					to: { opacity: 1 }
+					to: { opacity: 1 },
 				},
 				scaleIn: {
 					"0%": {
 						opacity: 0,
-						transform: "scale(0.9)"
+						transform: "scale(0.9)",
 					},
 					"50%": {
-						opacity: 0.3
+						opacity: 0.3,
 					},
 					"100%": {
 						opacity: 1,
-						transform: "scale(1)"
-					}
-				}
+						transform: "scale(1)",
+					},
+				},
 			},
 			animation: {
 				opacity: "animationOpacity .5s ease in-out",
-				scaleIn: "scaleIn .3s ease-in-out"
-			}
-		}
+				scaleIn: "scaleIn .3s ease-in-out",
+			},
+		},
 	},
-	plugins: []
-}
+	plugins: [],
+};
