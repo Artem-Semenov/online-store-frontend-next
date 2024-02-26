@@ -1,4 +1,4 @@
-import { instance } from "@/api/api.interceptor";
+import { axiosWithAuth } from "@/api/api.interceptor";
 import {
 	orderBaseUrl,
 	TCreateOrderData,
@@ -7,14 +7,14 @@ import { IOrder } from "@/types/order.interface";
 
 export const OrderService = {
 	async getAll() {
-		return instance<IOrder[]>({
+		return axiosWithAuth<IOrder[]>({
 			url: orderBaseUrl,
 			method: "GET",
 		});
 	},
 
 	async create(data: TCreateOrderData) {
-		return instance<IOrder>({
+		return axiosWithAuth<IOrder>({
 			url: orderBaseUrl,
 			method: "POST",
 			data,

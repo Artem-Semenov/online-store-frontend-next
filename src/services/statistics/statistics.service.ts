@@ -1,4 +1,4 @@
-import { instance } from "@/api/api.interceptor";
+import { axiosWithAuth } from "@/api/api.interceptor";
 import {
 	TstatisticsReturn,
 	statisticsBaseUrl,
@@ -6,7 +6,7 @@ import {
 
 export const StatisticsBaseUrlService = {
 	async getProfile() {
-		return instance<TstatisticsReturn>({
+		return axiosWithAuth<TstatisticsReturn>({
 			url: statisticsBaseUrl,
 			method: "GET",
 		});

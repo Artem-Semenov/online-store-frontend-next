@@ -1,39 +1,38 @@
 import { getContentType } from "@/api/api.helper";
-import { instance } from "@/api/api.interceptor";
+import { axiosClassic, axiosWithAuth } from "@/api/api.interceptor";
 import {
-	getRefreshToken,
 	saveToStorage,
 	authEnum,
+	removeTokensFromStorage,
 } from "@/services/auth/auth.helper";
+import { IAuthResponse } from "@/services/user/types/user.types";
 
-import { IAuthResponse, IEmailPassword } from "@/types/auth.interface";
-
-import axios from "axios";
+import { IEmailPassword } from "@/types/auth.interface";
 
 export const AuthService = {
 	async main(type: authEnum, data: IEmailPassword) {
-		const response = await instance<IAuthResponse>({
-			url: `/auth/${type}`,
-			method: "Post",
+		const response = await axiosClassic.post<IAuthResponse>(
+			`/auth/${type}`,
 			data,
-		});
+		);
 
 		if (response.data.accessToken) saveToStorage(response.data);
 
-		return response.data;
+		return response;
 	},
 
 	async getNewTokens() {
-		const refreshToken = getRefreshToken();
-		const response = await axios.post<string, { data: IAuthResponse }>(
-			process.env.SERVER_URL + "/auth/login/access-token",
-			{ refreshToken },
-			{
-				headers: getContentType(),
-			},
+		const response = await axiosClassic.post<IAuthResponse>(
+			"/auth/login/access-token",
 		);
 
 		if (response.data.accessToken) saveToStorage(response.data);
 		return response;
+	},
+
+	async logout() {
+		const response = await axiosClassic.post<boolean>("auth/logout");
+
+		if (response.data) removeTokensFromStorage();
 	},
 };

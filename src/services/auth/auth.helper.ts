@@ -1,4 +1,4 @@
-import { IAuthResponse, ITokens } from "@/store/slices/user/user.interface";
+import { IAuthResponse, ITokens } from "@/services/user/types/user.types";
 import Cookies from "js-cookie";
 
 export enum tokensEnum {
@@ -17,24 +17,16 @@ export const getAccessToken = () => {
 	return accessToken || null;
 };
 
-export const getRefreshToken = () => {
-	const refreshToken = Cookies.get(tokensEnum.refreshToken);
-
-	return refreshToken || null;
-};
-
 export const getUserFromStorage = async () => {
 	return JSON.parse(localStorage.getItem("user") || "{}");
 };
 
 export const saveTokensStorage = (data: ITokens) => {
 	Cookies.set(tokensEnum.accessToken, data.accessToken);
-	Cookies.set(tokensEnum.refreshToken, data.refreshToken);
 };
 
 export const removeTokensFromStorage = () => {
 	Cookies.remove(tokensEnum.accessToken);
-	Cookies.remove(tokensEnum.refreshToken);
 
 	localStorage.removeItem("user");
 };

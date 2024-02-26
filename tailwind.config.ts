@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
-const twColors = require("tailwindcss/colors");
+import twColors from "tailwindcss/colors";
+
 const colors = {
 	transparent: twColors.transparent,
 	black: "#80838a",
@@ -13,7 +14,8 @@ const colors = {
 	gray: "#CDCDCD",
 };
 
-module.exports = {
+/** @type {import('tailwindcss').Config} */
+export default {
 	content: ["./src/**/*.{html,js,tsx}"],
 	theme: {
 		colors,

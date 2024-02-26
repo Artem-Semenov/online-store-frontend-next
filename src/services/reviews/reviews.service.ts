@@ -1,4 +1,4 @@
-import { instance } from "@/api/api.interceptor";
+import { axiosWithAuth } from "@/api/api.interceptor";
 import { IReview } from "@/types/review.interface";
 import {
 	reviewsBaseUrl,
@@ -7,14 +7,14 @@ import {
 
 export const ReviewsService = {
 	async getAll() {
-		return instance<IReview[]>({
+		return axiosWithAuth<IReview[]>({
 			url: reviewsBaseUrl,
 			method: "GET",
 		});
 	},
 
 	async create(productId: string | number, data: TCreateReviewData) {
-		return instance<IReview>({
+		return axiosWithAuth<IReview>({
 			url: `${reviewsBaseUrl}/${productId}`,
 			method: "POST",
 			data,

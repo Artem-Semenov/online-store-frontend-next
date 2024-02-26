@@ -11,3 +11,19 @@ export interface IUserUpdateData {
 
 	phone?: string;
 }
+
+import { IUser } from "@/types/user.interface";
+
+export interface ITokens {
+	accessToken: string;
+}
+
+export interface IEmailPassword {
+	email: string;
+	password: string;
+}
+
+export interface IAuthResponse extends ITokens {
+	user: IUser;
+}
+

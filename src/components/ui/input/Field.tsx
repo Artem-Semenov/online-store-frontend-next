@@ -33,4 +33,6 @@ const Field = forwardRef<HTMLInputElement, IField>(
 	},
 );
 
+Field.displayName = "field";
+
 export default Field;
