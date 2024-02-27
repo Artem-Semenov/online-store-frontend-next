@@ -1,9 +1,11 @@
 "use client";
+import { errorCatch } from "@/api/api.helper";
 import { validEmail } from "@/app/login/valid-email";
 import Heading from "@/components/ui/Heading";
 import Loader from "@/components/ui/Loader/Loader";
 import LoaderWothOpacity from "@/components/ui/Loader/LoaderWothOpacity";
 import Button from "@/components/ui/button/Button";
+import ButtonLink from "@/components/ui/button/ButtonLink";
 import Field from "@/components/ui/input/Field";
 import { DASHBOARD_PAGES } from "@/config/pages-url.config";
 import { authEnum } from "@/services/auth/auth.helper";
@@ -11,7 +13,7 @@ import { AuthService } from "@/services/auth/auth.service";
 import { IEmailPassword } from "@/types/auth.interface";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -28,7 +30,7 @@ const Login = (props: Props) => {
 	const [type, setType] = useState<authEnum>(authEnum.login);
 	const { push, replace } = useRouter();
 
-	const { mutate } = useMutation({
+	const { mutate, isPending } = useMutation({
 		mutationKey: ["auth"],
 		mutationFn: (data: IEmailPassword) => AuthService.main(type, data),
 		onSuccess() {
@@ -36,12 +38,20 @@ const Login = (props: Props) => {
 			reset();
 			replace(DASHBOARD_PAGES.HOME);
 		},
+		onError: error => {
+			toast.error(errorCatch(error));
+		},
 	});
 
-	const { isSubmitting, errors } = formState;
+	const { errors } = formState;
 
 	const onSubmit: SubmitHandler<IEmailPassword> = async data => {
 		mutate(data);
+	};
+
+	const onChangeTypeClick = (e: SyntheticEvent) => {
+		e.preventDefault();
+		setType(type === authEnum.login ? authEnum.register : authEnum.login);
 	};
 
 	return (
@@ -75,13 +85,20 @@ const Login = (props: Props) => {
 					placeholder="Password"
 					error={errors.password?.message}
 				/>
-				<Button
-					disabled={isSubmitting ? true : false}
-					variant="white"
-					className="block mx-auto"
-				>
-					Login
-				</Button>
+				{isPending ? (
+					<div className="flex justify-center items-center">
+						<Loader color="black" />
+					</div>
+				) : (
+					<Button variant="white" className="block mx-auto">
+						{type === authEnum.login ? "Login" : "Create account"}
+					</Button>
+				)}
+				<div className="flex justify-center mt-2">
+					<ButtonLink onClick={onChangeTypeClick}>
+						{type === authEnum.login ? "Sign Up" : "Sign In"}
+					</ButtonLink>
+				</div>
 			</form>
 		</section>
 	);

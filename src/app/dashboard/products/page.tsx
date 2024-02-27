@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { NO_INDEX_PAGE } from "@/constants/seo.constants";
 import Heading from "@/components/ui/Heading";
-import { Statistics } from "@/app/dashboard/Statistics";
+import { ProductManagement } from "@/app/dashboard/products/ProductManagement";
 type Props = {};
 
 export const metadata: Metadata = {
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 const Dashboard = (props: Props) => {
 	return (
 		<div>
-			<Heading>Dashboard</Heading>
-			<Statistics />
+			<Heading>Product management</Heading>
+			<ProductManagement />
 		</div>
 	);
 };

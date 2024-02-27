@@ -31,7 +31,7 @@ export default function RootLayout({
 			<body className={zen.className}>
 				<Providers>
 					{children}
-					<Toaster />
+					<Toaster position="top-right"/>
 				</Providers>
 			</body>
 		</html>

@@ -5,24 +5,30 @@ import { IUserUpdateData } from "@/services/user/types/user.types";
 
 export const UserService = {
 	async getProfile() {
-		return axiosWithAuth<IUser>({
+		const res = await axiosWithAuth<IUser>({
 			url: `${userBaseUrl}/profile`,
 			method: "GET",
 		});
+
+		return res.data;
 	},
 
 	async updateProfile(data: IUserUpdateData) {
-		return axiosWithAuth<IUser>({
+		const res = await axiosWithAuth<IUser>({
 			url: `${userBaseUrl}/profile`,
 			method: "PUT",
 			data,
 		});
+
+		return res.data;
 	},
 
 	async toggleFavorite(productId: string | number) {
-		return axiosWithAuth<IUser>({
+		const res = await axiosWithAuth<IUser>({
 			url: `${userBaseUrl}/profile/favorites/${productId}`,
 			method: "PATCH",
 		});
+
+		return res.data;
 	},
 };

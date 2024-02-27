@@ -1,5 +1,4 @@
-import { getContentType } from "@/api/api.helper";
-import { axiosClassic, axiosWithAuth } from "@/api/api.interceptor";
+import { axiosClassic } from "@/api/api.interceptor";
 import {
 	saveToStorage,
 	authEnum,

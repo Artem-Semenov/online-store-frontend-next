@@ -1,4 +1,4 @@
-export const userBaseUrl = `user`;
+export const userBaseUrl = `users`;
 
 export interface IUserUpdateData {
 	email: string;
@@ -26,4 +26,3 @@ export interface IEmailPassword {
 export interface IAuthResponse extends ITokens {
 	user: IUser;
 }
-

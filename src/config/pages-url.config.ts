@@ -1,6 +1,8 @@
 class DASHBOARD {
 	private root = "/dashboard";
 	HOME = this.root;
+	PRODUCTS = this.root + "/products";
+	ORDERS = this.root + "/orders";
 }
 
 class PUBLIC {}
