@@ -6,12 +6,12 @@ import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function LogoutButton() {
-	const { push } = useRouter();
+	const { replace } = useRouter();
 
 	const { mutate } = useMutation({
 		mutationKey: ["logout"],
 		mutationFn: () => AuthService.logout(),
-		onSuccess: () => push("/"),
+		onSuccess: () => replace("/"),
 	});
 	return (
 		<div className="absolute top-1 right-1">

@@ -3,6 +3,7 @@ class DASHBOARD {
 	HOME = this.root;
 	PRODUCTS = this.root + "/products";
 	ORDERS = this.root + "/orders";
+	SETTINGS = this.root + "/settings";
 }
 
 class PUBLIC {}

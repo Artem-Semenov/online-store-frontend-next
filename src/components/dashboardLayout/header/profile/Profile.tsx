@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import Loader from "@/components/ui/Loader/Loader";
 import { useProfile } from "@/hooks/useProfile";
 
