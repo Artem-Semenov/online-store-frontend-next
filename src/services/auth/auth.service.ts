@@ -6,10 +6,10 @@ import {
 } from "@/services/auth/auth.helper";
 import { IAuthResponse } from "@/services/user/types/user.types";
 
-import { IEmailPassword } from "@/types/auth.interface";
+import { IEmailPassword, AuthForm } from "@/types/auth.interface";
 
 export const AuthService = {
-	async main(type: authEnum, data: IEmailPassword) {
+	async main(type: authEnum, data: AuthForm) {
 		const response = await axiosClassic.post<IAuthResponse>(
 			`/auth/${type}`,
 			data,

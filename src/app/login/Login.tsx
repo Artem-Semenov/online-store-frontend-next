@@ -1,5 +1,6 @@
 "use client";
 import { errorCatch } from "@/api/api.helper";
+import { useAfterSuccessLogin } from "@/app/login/useAfterSuccessLogin";
 import { validEmail } from "@/app/login/valid-email";
 import Heading from "@/components/ui/Heading";
 import Loader from "@/components/ui/Loader/Loader";
@@ -10,7 +11,7 @@ import Field from "@/components/ui/input/Field";
 import { DASHBOARD_PAGES } from "@/config/pages-url.config";
 import { authEnum } from "@/services/auth/auth.helper";
 import { AuthService } from "@/services/auth/auth.service";
-import { IEmailPassword } from "@/types/auth.interface";
+import { AuthForm, IEmailPassword } from "@/types/auth.interface";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { SyntheticEvent, useState } from "react";
@@ -24,19 +25,26 @@ const Login = (props: Props) => {
 		handleSubmit,
 		reset,
 		formState,
-	} = useForm<IEmailPassword>({
+	} = useForm<AuthForm>({
 		mode: "onChange",
 	});
 	const [type, setType] = useState<authEnum>(authEnum.login);
-	const { push, replace } = useRouter();
+	const { replace } = useRouter();
 
+	const [isSuccesRegister, setIsSuccessRegister] = useState<boolean>(false);
 	const { mutate, isPending } = useMutation({
 		mutationKey: ["auth"],
-		mutationFn: (data: IEmailPassword) => AuthService.main(type, data),
+		mutationFn: (data: AuthForm) => AuthService.main(type, data),
 		onSuccess() {
-			toast.success("Login successful!");
-			reset();
-			replace(DASHBOARD_PAGES.HOME);
+			if (type === authEnum.login) {
+				toast.success("Успішнйи вхід в систему");
+				reset();
+				replace(DASHBOARD_PAGES.HOME);
+			} else if (type === authEnum.register) {
+				toast.success("На вашу пошту було відправлено лист із підтвердженням!");
+				setIsSuccessRegister(true);
+				reset();
+			}
 		},
 		onError: error => {
 			toast.error(errorCatch(error));
@@ -54,52 +62,60 @@ const Login = (props: Props) => {
 		setType(type === authEnum.login ? authEnum.register : authEnum.login);
 	};
 
+	useAfterSuccessLogin();
+
 	return (
 		<section className="flex h-screen">
-			<form
-				onSubmit={handleSubmit(onSubmit)}
-				className="bg-white rounded-lg shadow-sm p-8 m-auto"
-			>
-				<Heading className="capitalize text-center mb-3">{type}</Heading>
-				<Field
-					{...formRegister("email", {
-						required: "Email is required",
-						pattern: {
-							value: validEmail,
-							message: "Please enter valid email",
-						},
-					})}
-					type="email"
-					placeholder="Email"
-					error={errors.email?.message}
-				/>
-				<Field
-					{...formRegister("password", {
-						required: "Password is required",
-						minLength: {
-							value: 4,
-							message: "Min length of password - 4 symbols",
-						},
-					})}
-					type="password"
-					placeholder="Password"
-					error={errors.password?.message}
-				/>
-				{isPending ? (
-					<div className="flex justify-center items-center">
-						<Loader color="black" />
-					</div>
-				) : (
-					<Button variant="white" className="block mx-auto">
-						{type === authEnum.login ? "Login" : "Create account"}
-					</Button>
-				)}
-				<div className="flex justify-center mt-2">
-					<ButtonLink onClick={onChangeTypeClick}>
-						{type === authEnum.login ? "Sign Up" : "Sign In"}
-					</ButtonLink>
+			{isSuccesRegister ? (
+				<div className="flex m-auto">
+					Registration Successful! Check your email
 				</div>
-			</form>
+			) : (
+				<form
+					onSubmit={handleSubmit(onSubmit)}
+					className="bg-white rounded-lg shadow-sm p-8 m-auto"
+				>
+					<Heading className="capitalize text-center mb-3">{type}</Heading>
+					<Field
+						{...formRegister("email", {
+							required: "Email is required",
+							pattern: {
+								value: validEmail,
+								message: "Please enter valid email",
+							},
+						})}
+						type="email"
+						placeholder="Email"
+						error={errors.email?.message}
+					/>
+					<Field
+						{...formRegister("password", {
+							required: "Password is required",
+							minLength: {
+								value: 4,
+								message: "Min length of password - 4 symbols",
+							},
+						})}
+						type="password"
+						placeholder="Password"
+						error={errors.password?.message}
+					/>
+					{isPending ? (
+						<div className="flex justify-center items-center">
+							<Loader color="black" />
+						</div>
+					) : (
+						<Button variant="white" className="block mx-auto">
+							{type === authEnum.login ? "Login" : "Create account"}
+						</Button>
+					)}
+					<div className="flex justify-center mt-2">
+						<ButtonLink onClick={onChangeTypeClick}>
+							{type === authEnum.login ? "Sign Up" : "Sign In"}
+						</ButtonLink>
+					</div>
+				</form>
+			)}
 		</section>
 	);
 };
