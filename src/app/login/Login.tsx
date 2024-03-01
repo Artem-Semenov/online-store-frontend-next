@@ -4,7 +4,6 @@ import { useAfterSuccessLogin } from "@/app/login/useAfterSuccessLogin";
 import { validEmail } from "@/app/login/valid-email";
 import Heading from "@/components/ui/Heading";
 import Loader from "@/components/ui/Loader/Loader";
-import LoaderWothOpacity from "@/components/ui/Loader/LoaderWothOpacity";
 import Button from "@/components/ui/button/Button";
 import ButtonLink from "@/components/ui/button/ButtonLink";
 import Field from "@/components/ui/input/Field";
@@ -18,16 +17,12 @@ import { SyntheticEvent, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
-type Props = {};
-const Login = (props: Props) => {
-	const {
-		register: formRegister,
-		handleSubmit,
-		reset,
-		formState,
-	} = useForm<AuthForm>({
-		mode: "onChange",
-	});
+const Login = () => {
+	const { register, handleSubmit, reset, formState, unregister, watch } =
+		useForm<AuthForm>({
+			mode: "onChange",
+			shouldUnregister: true,
+		});
 	const [type, setType] = useState<authEnum>(authEnum.login);
 	const { replace } = useRouter();
 
@@ -53,7 +48,7 @@ const Login = (props: Props) => {
 
 	const { errors } = formState;
 
-	const onSubmit: SubmitHandler<IEmailPassword> = async data => {
+	const onSubmit: SubmitHandler<AuthForm> = async data => {
 		mutate(data);
 	};
 
@@ -77,7 +72,7 @@ const Login = (props: Props) => {
 				>
 					<Heading className="capitalize text-center mb-3">{type}</Heading>
 					<Field
-						{...formRegister("email", {
+						{...register("email", {
 							required: "Email is required",
 							pattern: {
 								value: validEmail,
@@ -89,7 +84,7 @@ const Login = (props: Props) => {
 						error={errors.email?.message}
 					/>
 					<Field
-						{...formRegister("password", {
+						{...register("password", {
 							required: "Password is required",
 							minLength: {
 								value: 4,
@@ -100,6 +95,35 @@ const Login = (props: Props) => {
 						placeholder="Password"
 						error={errors.password?.message}
 					/>
+
+					{type === authEnum.register && (
+						<>
+							<Field
+								{...register("name", {
+									required: "Name is required",
+									minLength: {
+										value: 1,
+										message: "Name is required",
+									},
+								})}
+								type="text"
+								placeholder="Name"
+								error={errors.name?.message}
+							/>
+							<Field
+								{...register("phone", {
+									required: "Phone is required",
+									minLength: {
+										value: 10,
+										message: "Phone should be 10 minimum 10 charachters long",
+									},
+								})}
+								type="text"
+								placeholder="Phone"
+								error={errors.phone?.message}
+							/>
+						</>
+					)}
 					{isPending ? (
 						<div className="flex justify-center items-center">
 							<Loader color="black" />
