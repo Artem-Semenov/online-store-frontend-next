@@ -1,3 +1,5 @@
+import { UserRole } from "@/types/user.interface";
+
 class DASHBOARD {
 	private root = "/dashboard";
 	HOME = this.root;
@@ -6,7 +8,19 @@ class DASHBOARD {
 	SETTINGS = this.root + "/settings";
 }
 
-class PUBLIC {}
+class DASHBOARD_ACCESS {
+	HOME = [UserRole.admin, UserRole.manager];
+	PRODUCTS = [UserRole.admin, UserRole.manager];
+	ORDERS = [UserRole.admin];
+	SETTINGS = [UserRole.admin];
+}
+
+class PUBLIC {
+	private root = "/";
+	HOME = this.root;
+	LOGIN = this.root + "/login";
+}
 
 export const DASHBOARD_PAGES = new DASHBOARD();
 export const PUBLIC_PAGES = new PUBLIC();
+export const DASHBOARD_ACCESS_GROUPS = new DASHBOARD_ACCESS();
