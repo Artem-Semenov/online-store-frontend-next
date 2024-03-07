@@ -5,3 +5,9 @@ export interface IUser {
 	avatarPath: string;
 	phone: string;
 }
+
+export enum UserRole {
+	admin = "ADMIN",
+	manager = "MANAGER",
+	user = "USER",
+}

@@ -1,9 +1,10 @@
 import { DASHBOARD_PAGES } from "@/config/pages-url.config";
+import { useServerUserRole } from "@/hooks/server/useUserRole";
 import { tokensEnum } from "@/services/auth/auth.helper";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
 	const { url, cookies } = request;
 
 	const refreshToken = cookies.get(tokensEnum.refreshToken)?.value;
@@ -11,7 +12,8 @@ export function middleware(request: NextRequest) {
 
 	const isLoginPage = url.includes("/login");
 
-	//add server request for check role
+	//add role based access
+	//const role = await useServerUserRole();
 
 	if (refreshToken && isLoginPage) {
 		return NextResponse.redirect(new URL(DASHBOARD_PAGES.HOME, request.url));

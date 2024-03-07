@@ -1,10 +1,12 @@
 import { LogoutButton } from "@/components/dashboardLayout/sidebar/LogoutButton";
 import { MenuItem } from "@/components/dashboardLayout/sidebar/MenuItem";
 import { MENU } from "@/components/dashboardLayout/sidebar/menu.data";
+import { useServerUserRole } from "@/hooks/server/useUserRole";
 import { GanttChartSquareIcon } from "lucide-react";
 import Link from "next/link";
 
-export function Sidebar() {
+export async function Sidebar() {
+	const role = await useServerUserRole();
 	return (
 		<aside className="border-r border-r-black h-full bg-secondary flex flex-col justify-between">
 			<div>
@@ -14,7 +16,7 @@ export function Sidebar() {
 				</Link>
 				<div className="p-3 relative">
 					<LogoutButton />
-					{MENU.map(el => (
+					{MENU.filter(el => el.roles.includes(role)).map(el => (
 						<MenuItem key={el.link} item={el} />
 					))}
 				</div>

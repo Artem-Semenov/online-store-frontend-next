@@ -21,7 +21,7 @@ const Login = () => {
 	const { register, handleSubmit, reset, formState, unregister, watch } =
 		useForm<AuthForm>({
 			mode: "onChange",
-			shouldUnregister: true,
+			shouldUnregister: false,
 		});
 	const [type, setType] = useState<authEnum>(authEnum.login);
 	const { replace } = useRouter();
