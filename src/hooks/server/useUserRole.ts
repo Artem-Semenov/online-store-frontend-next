@@ -1,25 +1,44 @@
 "use server";
 
-import { tokensEnum } from "@/services/auth/auth.helper";
 import { ITokenPayload } from "@/types/auth.interface";
-import { UserRole } from "@/types/user.interface";
+import { Ttokens } from "@/types/tokens.interface";
+import { AES, enc } from "crypto-js";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 
-export const useServerAccessTokenPayload = () => {
-	const accessToken = cookies().get(tokensEnum.accessToken)?.value;
-	if (!accessToken) return null;
-
-	const decoded = jwtDecode<ITokenPayload>(accessToken);
-
-	return decoded;
-};
-
 export async function useServerUserRole() {
-	const accessTokenPayload = useServerAccessTokenPayload();
-	if (!accessTokenPayload) return UserRole.user;
+	const refreshTokenPayload = await useServerRefreshTokenPayload();
+	if (!refreshTokenPayload) return null;
 
-	let role = accessTokenPayload.role;
+	let role = refreshTokenPayload.role;
 
 	return role;
 }
+
+export const useServerRefreshTokenPayload = async () => {
+	const jwe = cookies().get(process.env.JWE_COOKIE_NAME!)?.value;
+	if (!jwe) return null;
+	const decoded = await decrypt(jwe);
+	if (!decoded) return null;
+	const { refreshToken } = decoded;
+	// console.log("refreshToken", refreshToken);
+	const refreshTokenPayload = jwtDecode<ITokenPayload>(refreshToken);
+
+	return refreshTokenPayload;
+};
+
+export const decrypt = async (jwe: string): Promise<Ttokens | null> => {
+	try {
+		const privateKey = process.env.JWE_ECRYPTION_SECRET!;
+		const decrypted = JSON.parse(
+			AES.decrypt(jwe, privateKey).toString(enc.Utf8),
+		).payload;
+
+		// console.log("decrypted", decrypted);
+
+		return decrypted;
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+};

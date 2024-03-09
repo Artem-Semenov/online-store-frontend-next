@@ -14,12 +14,11 @@ export async function middleware(request: NextRequest) {
 	// console.log("accessToken", refreshToken);
 
 	const isLoginPage = url.includes("/login");
-	console.log(url);
 
 	//add role based access
 	const role = await useServerUserRole();
-
-	if (refreshToken && isLoginPage) {
+	console.log(role);
+	if (role && isLoginPage) {
 		return NextResponse.redirect(new URL(DASHBOARD_PAGES.HOME, request.url));
 	}
 
@@ -27,7 +26,7 @@ export async function middleware(request: NextRequest) {
 		return NextResponse.next();
 	}
 
-	if (!refreshToken) {
+	if (!role) {
 		return NextResponse.redirect(new URL("/login", request.url));
 	}
 

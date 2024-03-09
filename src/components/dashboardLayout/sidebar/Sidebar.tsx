@@ -7,6 +7,7 @@ import Link from "next/link";
 
 export async function Sidebar() {
 	const role = await useServerUserRole();
+
 	return (
 		<aside className="border-r border-r-black h-full bg-secondary flex flex-col justify-between">
 			<div>
