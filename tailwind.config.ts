@@ -11,15 +11,15 @@ const colors = {
 	"bg-color": "#f2f2f5",
 	aqua: "#74afbb",
 	red: twColors.red[400],
-	gray: "#CDCDCD",
+	// gray: "#CDCDCD",
 };
 
 /** @type {import('tailwindcss').Config} */
 export default {
 	content: ["./src/**/*.{html,js,tsx}"],
 	theme: {
-		colors,
 		extend: {
+			colors,
 			fontSize: {
 				xs: "0.82rem",
 				sm: "0.98rem",

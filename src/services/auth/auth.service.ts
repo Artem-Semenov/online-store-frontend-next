@@ -2,7 +2,7 @@ import { axiosClassic } from "@/api/api.interceptor";
 import {
 	saveToStorage,
 	authEnum,
-	removeTokensFromStorage,
+	// removeTokensFromStorage,
 } from "@/services/auth/auth.helper";
 import { IAuthResponse } from "@/services/user/types/user.types";
 
@@ -32,6 +32,6 @@ export const AuthService = {
 	async logout() {
 		const response = await axiosClassic.post<boolean>("auth/logout");
 
-		if (response.data) removeTokensFromStorage();
+		// if (response.data) removeTokensFromStorage();
 	},
 };

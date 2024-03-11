@@ -6,6 +6,7 @@ import Heading from "@/components/ui/Heading";
 import Loader from "@/components/ui/Loader/Loader";
 import Button from "@/components/ui/button/Button";
 import ButtonLink from "@/components/ui/button/ButtonLink";
+import { GoogleButton } from "@/components/ui/button/GoogleButton";
 import Field from "@/components/ui/input/Field";
 import { DASHBOARD_PAGES } from "@/config/pages-url.config";
 import { authEnum } from "@/services/auth/auth.helper";
@@ -13,10 +14,11 @@ import { AuthService } from "@/services/auth/auth.service";
 import { AuthForm, IEmailPassword } from "@/types/auth.interface";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
+import { useSignInGoogleWindow } from "@/app/login/useSignInGoogleWindow/useSignInGoogleWindow";
 const Login = () => {
 	const { register, handleSubmit, reset, formState, unregister, watch } =
 		useForm<AuthForm>({
@@ -59,6 +61,14 @@ const Login = () => {
 
 	useAfterSuccessLogin();
 
+	const gogleLoginHandler = (e: SyntheticEvent) => {
+		e.preventDefault();
+		useSignInGoogleWindow(
+			`${process.env.SERVER_URL}/auth/google/callback`,
+			"Login with google",
+		);
+	};
+
 	return (
 		<section className="flex h-screen">
 			{isSuccesRegister ? (
@@ -71,6 +81,9 @@ const Login = () => {
 					className="bg-white rounded-lg shadow-sm p-8 m-auto"
 				>
 					<Heading className="capitalize text-center mb-3">{type}</Heading>
+
+					<GoogleButton onclick={gogleLoginHandler} />
+
 					<Field
 						{...register("email", {
 							required: "Email is required",

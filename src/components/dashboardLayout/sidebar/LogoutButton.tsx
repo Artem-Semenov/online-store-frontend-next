@@ -11,7 +11,7 @@ export function LogoutButton() {
 	const { mutate } = useMutation({
 		mutationKey: ["logout"],
 		mutationFn: () => AuthService.logout(),
-		onSuccess: () => replace("/"),
+		onSuccess: () => replace("/login"),
 	});
 	return (
 		<div className="absolute top-1 right-1">
