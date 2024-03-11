@@ -34,9 +34,8 @@ const Login = () => {
 		mutationFn: (data: AuthForm) => AuthService.main(type, data),
 		onSuccess() {
 			if (type === authEnum.login) {
-				toast.success("Успішнйи вхід в систему");
 				reset();
-				replace(DASHBOARD_PAGES.HOME);
+				onSuccessfulLogin();
 			} else if (type === authEnum.register) {
 				toast.success("На вашу пошту було відправлено лист із підтвердженням!");
 				setIsSuccessRegister(true);
@@ -61,12 +60,18 @@ const Login = () => {
 
 	useAfterSuccessLogin();
 
+	const onSuccessfulLogin = () => {
+		toast.success("Успішний вхід в систему");
+		replace(DASHBOARD_PAGES.HOME);
+	};
+	
 	const gogleLoginHandler = (e: SyntheticEvent) => {
 		e.preventDefault();
-		useSignInGoogleWindow(
-			`${process.env.SERVER_URL}/auth/google/callback`,
-			"Login with google",
-		);
+		useSignInGoogleWindow({
+			url: `${process.env.SERVER_URL}/auth/google/callback`,
+			name: "Login with google",
+			onSuccessfulLogin,
+		});
 	};
 
 	return (

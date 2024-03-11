@@ -1,18 +1,25 @@
 let windowObjectReference: Window | null = null;
 let previousUrl: string | null = null;
 
-const receiveMessage = (event: MessageEvent<any>) => {
-	if (event.origin !== process.env.NEXT_PUBLIC_CLIENT_URL) {
-		return;
-	}
-	const { data } = event;
-	if (data.source === "google-login-popup" && data.login) {
-		window.location.reload();
-	}
+type Props = {
+	url: string;
+	name: string;
+	onSuccessfulLogin: () => void;
 };
-
-export const useSignInGoogleWindow = (url: string, name: string) => {
-	window.removeEventListener("message", receiveMessage);
+export const useSignInGoogleWindow = ({
+	name,
+	url,
+	onSuccessfulLogin,
+}: Props) => {
+	const receiveMessage = (event: MessageEvent<any>) => {
+		if (event.origin !== process.env.NEXT_PUBLIC_CLIENT_URL) {
+			return;
+		}
+		const { data } = event;
+		if (data.source === "google-login-popup" && data.login) {
+			onSuccessfulLogin();
+		}
+	};
 
 	const strWindowFeatures =
 		"toolbar=no, menubar=no, width=600, height=700, top=100, left=100";
@@ -26,6 +33,6 @@ export const useSignInGoogleWindow = (url: string, name: string) => {
 		windowObjectReference.focus();
 	}
 
-	window.addEventListener("message", event => receiveMessage(event), false);
+	window.onmessage = receiveMessage;
 	previousUrl = url;
 };

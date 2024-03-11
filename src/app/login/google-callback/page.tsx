@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 
 export default () => {
 	useEffect(() => {
-		if (window.opener) {
+		if (window.opener && !window.messagePosted) {
+			window.messagePosted = true;
 			window.opener.postMessage({
 				source: "google-login-popup",
 				login: true,
