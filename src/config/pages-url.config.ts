@@ -15,6 +15,11 @@ class DASHBOARD_ACCESS {
 	SETTINGS = [UserRole.admin];
 }
 
+class CABINET {
+	private root = "/cabinet";
+	HOME = this.root;
+}
+
 class PUBLIC {
 	private root = "/";
 	HOME = this.root;
@@ -22,5 +27,6 @@ class PUBLIC {
 }
 
 export const DASHBOARD_PAGES = new DASHBOARD();
+export const CABINET_PAGES = new CABINET();
 export const PUBLIC_PAGES = new PUBLIC();
 export const DASHBOARD_ACCESS_GROUPS = new DASHBOARD_ACCESS();

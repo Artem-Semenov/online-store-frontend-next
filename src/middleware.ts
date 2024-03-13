@@ -1,24 +1,29 @@
 import {
 	DASHBOARD_PAGES,
 	DASHBOARD_ACCESS_GROUPS,
+	CABINET_PAGES,
 } from "@/config/pages-url.config";
 import { useServerUserRole } from "@/hooks/server/useUserRole";
 import { tokensEnum } from "@/services/auth/auth.helper";
+import { UserRole } from "@/types/user.interface";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-	const { url, cookies } = request;
-
-	//const refreshToken = cookies.get(tokensEnum.refreshToken)?.value;
-	// console.log("accessToken", refreshToken);
+	const { url } = request;
 
 	const isLoginPage = url.includes("/login");
+	const isDashboardPage = url.includes(DASHBOARD_PAGES.HOME);
+	const isCabinetPage = url.includes(CABINET_PAGES.HOME);
 
-	//add role based access
 	const role = await useServerUserRole();
-	// console.log(role);
+	console.log("middleware role", role);
+	const isUser = role === UserRole.user;
+
 	if (role && isLoginPage) {
+		if (isUser) {
+			return NextResponse.redirect(new URL(CABINET_PAGES.HOME, request.url));
+		}
 		return NextResponse.redirect(new URL(DASHBOARD_PAGES.HOME, request.url));
 	}
 
@@ -28,6 +33,10 @@ export async function middleware(request: NextRequest) {
 
 	if (!role) {
 		return NextResponse.redirect(new URL("/login", request.url));
+	}
+
+	if (isDashboardPage && isUser) {
+		return NextResponse.redirect(new URL(CABINET_PAGES.HOME, request.url));
 	}
 
 	if (
@@ -48,5 +57,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-	matcher: ["/dashboard/:path*", "/login/:path"],
+	matcher: ["/login/:path", "/dashboard/:path*", "/cabinet/:path*"],
 };
