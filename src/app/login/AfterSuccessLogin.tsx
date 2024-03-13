@@ -1,10 +1,11 @@
 "use client";
 
+import { revalidateDashboard } from "@/hooks/server/revalidation";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export function useAfterSuccessLogin() {
+export default function AfterSuccessLogin() {
 	const activatedParam = "activated";
 	const searchParams = useSearchParams();
 
@@ -23,5 +24,7 @@ export function useAfterSuccessLogin() {
 
 	useEffect(() => {
 		callback();
-	}, [callback]);
+	}, []);
+
+	return <></>;
 }

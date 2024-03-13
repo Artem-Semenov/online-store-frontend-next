@@ -10,14 +10,14 @@ import type { NextRequest } from "next/server";
 export async function middleware(request: NextRequest) {
 	const { url, cookies } = request;
 
-	const refreshToken = cookies.get(tokensEnum.refreshToken)?.value;
+	//const refreshToken = cookies.get(tokensEnum.refreshToken)?.value;
 	// console.log("accessToken", refreshToken);
 
 	const isLoginPage = url.includes("/login");
 
 	//add role based access
 	const role = await useServerUserRole();
-	console.log(role);
+	// console.log(role);
 	if (role && isLoginPage) {
 		return NextResponse.redirect(new URL(DASHBOARD_PAGES.HOME, request.url));
 	}

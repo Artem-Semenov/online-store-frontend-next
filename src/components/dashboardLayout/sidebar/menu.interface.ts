@@ -5,5 +5,5 @@ export interface IMenuItem {
 	link: string;
 	name: string;
 	icon: LucideIcon;
-	roles: UserRole[];
+	roles: (UserRole | null)[];
 }

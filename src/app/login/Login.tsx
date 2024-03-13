@@ -1,6 +1,5 @@
 "use client";
 import { errorCatch } from "@/api/api.helper";
-import { useAfterSuccessLogin } from "@/app/login/useAfterSuccessLogin";
 import { validEmail } from "@/app/login/valid-email";
 import Heading from "@/components/ui/Heading";
 import Loader from "@/components/ui/Loader/Loader";
@@ -11,14 +10,17 @@ import Field from "@/components/ui/input/Field";
 import { DASHBOARD_PAGES } from "@/config/pages-url.config";
 import { authEnum } from "@/services/auth/auth.helper";
 import { AuthService } from "@/services/auth/auth.service";
-import { AuthForm, IEmailPassword } from "@/types/auth.interface";
+import { AuthForm } from "@/types/auth.interface";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { SyntheticEvent, useRef, useState } from "react";
+import { Suspense, SyntheticEvent, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 import { useSignInGoogleWindow } from "@/app/login/useSignInGoogleWindow/useSignInGoogleWindow";
+import AfterSuccessLogin from "@/app/login/AfterSuccessLogin";
+import { RevalidateDashboard } from "@/app/login/RevalidateDashboard";
+
+type Props = {};
 const Login = () => {
 	const { register, handleSubmit, reset, formState, unregister, watch } =
 		useForm<AuthForm>({
@@ -26,7 +28,7 @@ const Login = () => {
 			shouldUnregister: false,
 		});
 	const [type, setType] = useState<authEnum>(authEnum.login);
-	const { replace } = useRouter();
+	const { replace, refresh } = useRouter();
 
 	const [isSuccesRegister, setIsSuccessRegister] = useState<boolean>(false);
 	const { mutate, isPending } = useMutation({
@@ -58,13 +60,11 @@ const Login = () => {
 		setType(type === authEnum.login ? authEnum.register : authEnum.login);
 	};
 
-	useAfterSuccessLogin();
-
-	const onSuccessfulLogin = () => {
-		toast.success("Успішний вхід в систему");
+	const onSuccessfulLogin = async () => {
 		replace(DASHBOARD_PAGES.HOME);
+		toast.success("Успішний вхід в систему");
 	};
-	
+
 	const gogleLoginHandler = (e: SyntheticEvent) => {
 		e.preventDefault();
 		useSignInGoogleWindow({
@@ -76,6 +76,10 @@ const Login = () => {
 
 	return (
 		<section className="flex h-screen">
+			<Suspense>
+				<RevalidateDashboard />
+				<AfterSuccessLogin />
+			</Suspense>
 			{isSuccesRegister ? (
 				<div className="flex m-auto">
 					Registration Successful! Check your email
@@ -147,7 +151,7 @@ const Login = () => {
 							<Loader color="black" />
 						</div>
 					) : (
-						<Button variant="white" className="block mx-auto">
+						<Button variant="white" className="block mx-auto" type="submit">
 							{type === authEnum.login ? "Login" : "Create account"}
 						</Button>
 					)}
