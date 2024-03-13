@@ -23,6 +23,10 @@ export default function AfterSuccessLogin() {
 	}, [isAfterSuccessfulLogin]);
 
 	useEffect(() => {
+		// now it doesnt work because we dont redirect user to the login page anymore
+		// we set cookies into response after user confirms email thats why user redirects instantly to dashbaord
+		//TODO - set client cookie on server on email confirmation redirect and call callback(toast) based on cookies here
+		// after that - delete cookie to make sure that calback called only once.
 		callback();
 	}, []);
 
