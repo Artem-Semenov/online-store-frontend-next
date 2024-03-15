@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
 
 import { NO_INDEX_PAGE } from "@/constants/seo.constants";
-import { Settings } from "@/app/dashboard/settings/Settings";
 import Heading from "@/components/ui/Heading";
+import { OrdersManagement } from "@/app/[lang]/dashboard/orders/OrdersManagement";
 
 export const metadata: Metadata = {
-	title: "",
+	title: "Dasboard | orders",
 	...NO_INDEX_PAGE,
 };
 
 export default function Page() {
-	return <Settings />;
+	return (
+		<div>
+			<div>
+				<Heading>Orders Management</Heading>
+				<OrdersManagement />
+			</div>
+		</div>
+	);
 }

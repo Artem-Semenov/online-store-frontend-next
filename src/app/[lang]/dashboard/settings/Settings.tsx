@@ -1,7 +1,7 @@
 "use client";
-import { useInitialData } from "@/app/dashboard/settings/useInitialData";
-import { useUpdateProfile } from "@/app/dashboard/settings/useUpdateProfile";
-import { validEmail } from "@/app/login/valid-email";
+import { useInitialData } from "@/app/[lang]/dashboard/settings/useInitialData";
+import { useUpdateProfile } from "@/app/[lang]/dashboard/settings/useUpdateProfile";
+import { validEmail } from "@/app/[lang]/login/valid-email";
 import Heading from "@/components/ui/Heading";
 import Loader from "@/components/ui/Loader/Loader";
 import Button from "@/components/ui/button/Button";

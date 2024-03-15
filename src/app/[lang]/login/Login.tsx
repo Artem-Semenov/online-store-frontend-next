@@ -1,6 +1,10 @@
 "use client";
 import { errorCatch } from "@/api/api.helper";
-import { validEmail } from "@/app/login/valid-email";
+import AfterSuccessLogin from "@/app/[lang]/login/AfterSuccessLogin";
+import { RevalidateDashboard } from "@/app/[lang]/login/RevalidateDashboard";
+import { useSignInGoogleWindow } from "@/app/[lang]/login/useSignInGoogleWindow/useSignInGoogleWindow";
+import { validEmail } from "@/app/[lang]/login/valid-email";
+import { TLanguages } from "@/app/i18n/types";
 import Heading from "@/components/ui/Heading";
 import Loader from "@/components/ui/Loader/Loader";
 import Button from "@/components/ui/button/Button";
@@ -16,12 +20,11 @@ import { useRouter } from "next/navigation";
 import { Suspense, SyntheticEvent, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useSignInGoogleWindow } from "@/app/login/useSignInGoogleWindow/useSignInGoogleWindow";
-import AfterSuccessLogin from "@/app/login/AfterSuccessLogin";
-import { RevalidateDashboard } from "@/app/login/RevalidateDashboard";
 
-type Props = {};
-const Login = () => {
+type Props = {
+	lang: TLanguages;
+};
+const Login = ({ lang }: Props) => {
 	const { register, handleSubmit, reset, formState, unregister, watch } =
 		useForm<AuthForm>({
 			mode: "onChange",
@@ -61,7 +64,7 @@ const Login = () => {
 	};
 
 	const onSuccessfulLogin = async () => {
-		replace(DASHBOARD_PAGES.HOME);
+		replace(`/${lang}${DASHBOARD_PAGES.HOME}`);
 		toast.success("Успішний вхід в систему");
 	};
 

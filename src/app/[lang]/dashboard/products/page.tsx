@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { NO_INDEX_PAGE } from "@/constants/seo.constants";
 import Heading from "@/components/ui/Heading";
-import { ProductManagement } from "@/app/dashboard/products/ProductManagement";
+import { ProductManagement } from "@/app/[lang]/dashboard/products/ProductManagement";
 type Props = {};
 
 export const metadata: Metadata = {

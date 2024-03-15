@@ -1,4 +1,5 @@
-import Login from "@/app/login/Login";
+import Login from "@/app/[lang]/login/Login";
+import { PropsWithLocale } from "@/app/[lang]/page";
 import { generateMedatada } from "@/components/Metadata/Metadata";
 import { NO_INDEX_PAGE } from "@/constants/seo.constants";
 
@@ -12,8 +13,6 @@ export const metadata: Metadata = generateMedatada({
 	...NO_INDEX_PAGE,
 });
 
-export const LoginPage = () => {
-	return <Login />;
+export default function LoginPage({ params: { lang } }: PropsWithLocale) {
+	return <Login lang={lang} />;
 };
-
-export default LoginPage;

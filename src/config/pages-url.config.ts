@@ -23,7 +23,8 @@ class CABINET {
 class PUBLIC {
 	private root = "/";
 	HOME = this.root;
-	LOGIN = this.root + "/login";
+	LOGIN = this.root + "login";
+	"404" = this.root + "404";
 }
 
 export const DASHBOARD_PAGES = new DASHBOARD();
