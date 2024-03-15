@@ -15,6 +15,13 @@ export async function middleware(request: NextRequest) {
 	const isLoginPage = url.includes("/login");
 	const isDashboardPage = url.includes(DASHBOARD_PAGES.HOME);
 	const isCabinetPage = url.includes(CABINET_PAGES.HOME);
+	const isPublicPage = !isCabinetPage && !isDashboardPage;
+
+	if (isPublicPage) {
+		return NextResponse.next();
+	}
+
+	//TODO - check for saved language in cookie and redirect appropriate;
 
 	const role = await useServerUserRole();
 	console.log("middleware role", role);
