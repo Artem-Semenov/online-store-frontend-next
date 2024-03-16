@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 export default () => {
 	useEffect(() => {
+		console.log(window.opener);
 		if (window.opener && !window.messagePosted) {
 			window.messagePosted = true;
 			window.opener.postMessage({

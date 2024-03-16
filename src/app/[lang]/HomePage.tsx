@@ -11,9 +11,6 @@ export const metadata: Metadata = {
 
 export default async function HomePage({ lang }: { lang: TLanguages }) {
 	const { t } = await useTranslation(lang);
-	// console.log("lang", lang);
-
-	// console.log(t);
 	return (
 		<div>
 			<Heading>{t("helloWorld")}</Heading>

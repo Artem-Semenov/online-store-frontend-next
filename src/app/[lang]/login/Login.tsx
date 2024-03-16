@@ -64,11 +64,14 @@ const Login = ({ lang }: Props) => {
 	};
 
 	const onSuccessfulLogin = async () => {
+		console.log("onSuccessfulLogin call");
 		replace(`/${lang}${DASHBOARD_PAGES.HOME}`);
 		toast.success("Успішний вхід в систему");
 	};
 
 	const gogleLoginHandler = (e: SyntheticEvent) => {
+		console.log("gogleLoginHandler call");
+
 		e.preventDefault();
 		useSignInGoogleWindow({
 			url: `${process.env.SERVER_URL}/auth/google/callback`,

@@ -6,7 +6,6 @@ import {
 	PUBLIC_PAGES,
 } from "@/config/pages-url.config";
 import { useServerUserRole } from "@/hooks/server/useUserRole";
-import { tokensEnum } from "@/services/auth/auth.helper";
 import { UserRole } from "@/types/user.interface";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
@@ -23,11 +22,11 @@ const needToAttachSuffix = (request: NextRequest) => {
 
 export async function middleware(request: NextRequest) {
 	const { url } = request;
-	console.log("request.nextUrl.pathname", request.nextUrl.pathname);
+
 	const isLoginPage = url.includes(PUBLIC_PAGES.LOGIN);
 	const isDashboardPage = url.includes(DASHBOARD_PAGES.HOME);
 	const isCabinetPage = url.includes(CABINET_PAGES.HOME);
-	const isPublicPage = !isCabinetPage && !isDashboardPage;
+	const isPublicPage = !isCabinetPage && !isDashboardPage && !isLoginPage;
 
 	//
 	let lang;
@@ -52,10 +51,10 @@ export async function middleware(request: NextRequest) {
 	}
 
 	const role = await useServerUserRole();
-	console.log("middleware role", role);
+	// console.log("middleware role", role);
 	const isUser = role === UserRole.user;
 
-	console.log(111);
+	// console.log(111);
 
 	if (role && isLoginPage) {
 		if (isUser) {
@@ -69,6 +68,11 @@ export async function middleware(request: NextRequest) {
 	}
 
 	if (isLoginPage) {
+		if (needToAttachSuffix(request)) {
+			return NextResponse.redirect(
+				new URL(`${langSuffix}${request.nextUrl.pathname}`, request.url),
+			);
+		}
 		return NextResponse.next();
 	}
 
@@ -77,7 +81,7 @@ export async function middleware(request: NextRequest) {
 			new URL(langSuffix + PUBLIC_PAGES.LOGIN, request.url),
 		);
 	}
-	console.log(222);
+	// console.log(222);
 
 	if (isDashboardPage && isUser) {
 		return NextResponse.redirect(
@@ -98,8 +102,8 @@ export async function middleware(request: NextRequest) {
 	) {
 		return NextResponse.redirect(new URL(PUBLIC_PAGES[404], request.url));
 	}
-	console.log("need to attach", needToAttachSuffix(request));
-	console.log(333);
+	// console.log("need to attach", needToAttachSuffix(request));
+	// console.log(333);
 
 	if (needToAttachSuffix(request)) {
 		return NextResponse.redirect(

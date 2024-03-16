@@ -1,3 +1,4 @@
+import { TLanguages } from "@/app/i18n/types";
 import { LogoutButton } from "@/components/dashboardLayout/sidebar/LogoutButton";
 import { MenuItem } from "@/components/dashboardLayout/sidebar/MenuItem";
 import { MENU } from "@/components/dashboardLayout/sidebar/menu.data";
@@ -5,7 +6,7 @@ import { useServerUserRole } from "@/hooks/server/useUserRole";
 import { GanttChartSquareIcon } from "lucide-react";
 import Link from "next/link";
 
-export async function Sidebar() {
+export async function Sidebar({ lang }: { lang: TLanguages }) {
 	const role = await useServerUserRole();
 
 	return (
@@ -18,7 +19,7 @@ export async function Sidebar() {
 				<div className="p-3 relative">
 					<LogoutButton />
 					{MENU.filter(el => el.roles.includes(role)).map(el => (
-						<MenuItem key={el.link} item={el} />
+						<MenuItem lang={lang} key={el.link} item={el} />
 					))}
 				</div>
 			</div>
