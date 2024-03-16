@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { Providers } from "@/app/[lang]/providers";
 import { dir } from "i18next";
 import { languages } from "@/app/i18n/settings";
+import LangSwitcher from "@/components/langSwitcher/LangSwitcher";
 
 const zen = Noto_Sans({
 	subsets: ["cyrillic", "latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
 		<html lang={lang} dir={dir(lang)}>
 			<body className={zen.className}>
 				<Providers>
+					<LangSwitcher />
 					{children}
 					<Toaster position="bottom-right" />
 				</Providers>

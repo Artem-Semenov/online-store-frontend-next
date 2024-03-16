@@ -1,4 +1,4 @@
-import { cookieName, fallbackLng, languages } from "@/app/i18n/settings";
+import { langCookieName, fallbackLng, languages } from "@/app/i18n/settings";
 import {
 	DASHBOARD_PAGES,
 	DASHBOARD_ACCESS_GROUPS,
@@ -31,8 +31,8 @@ export async function middleware(request: NextRequest) {
 	//
 	let lang;
 	let langSuffix = "";
-	if (request.cookies.has(cookieName))
-		lang = acceptLanguage.get(request.cookies.get(cookieName)?.value);
+	if (request.cookies.has(langCookieName))
+		lang = acceptLanguage.get(request.cookies.get(langCookieName)?.value);
 	if (!lang) lang = acceptLanguage.get(request.headers.get("Accept-Language"));
 	if (!lang) lang = fallbackLng;
 

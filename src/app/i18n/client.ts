@@ -13,7 +13,7 @@ import { useCookies } from "react-cookie";
 import resourcesToBackend from "i18next-resources-to-backend";
 // import LocizeBackend from 'i18next-locize-backend'
 import LanguageDetector from "i18next-browser-languagedetector";
-import { getOptions, languages, cookieName } from "./settings";
+import { getOptions, languages, langCookieName } from "./settings";
 
 const runsOnServerSide = typeof window === "undefined";
 
@@ -45,7 +45,7 @@ export function useTranslation<
 	ns?: Ns,
 	options?: UseTranslationOptions<KPrefix>,
 ): UseTranslationResponse<FallbackNs<Ns>, KPrefix> {
-	const [cookies, setCookie] = useCookies([cookieName]);
+	const [cookies, setCookie] = useCookies([langCookieName]);
 	const ret = useTranslationOrg(ns, options);
 	const { i18n } = ret;
 	if (runsOnServerSide && lng && i18n.resolvedLanguage !== lng) {
@@ -66,7 +66,7 @@ export function useTranslation<
 		// eslint-disable-next-line react-hooks/rules-of-hooks
 		useEffect(() => {
 			if (cookies.i18next === lng) return;
-			setCookie(cookieName, lng, { path: "/" });
+			setCookie(langCookieName, lng, { path: "/" });
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [lng, cookies.i18next]);
 	}

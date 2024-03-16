@@ -3,7 +3,7 @@ import { TLanguages } from "@/app/i18n/types";
 export const fallbackLng: TLanguages = "ua";
 export const languages: TLanguages[] = [fallbackLng, "ru"];
 export const defaultNS = "home";
-export const cookieName = "i18next";
+export const langCookieName = "i18next";
 
 export function getOptions(
 	lng = fallbackLng,
