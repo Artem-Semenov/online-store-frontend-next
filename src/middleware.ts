@@ -69,6 +69,16 @@ export async function middleware(request: NextRequest) {
 			);
 		}
 
+		//для кейса когда мы вручную добавляем язык в урле - будет перекидывать назад на дефолтный
+		if (!noLangSuffix(request) && requestLocale !== lang) {
+			return NextResponse.redirect(
+				new URL(
+					`${request.nextUrl.pathname.slice(requestLocale.length + 1) || "/"}`,
+					request.url,
+				),
+			);
+		}
+
 		return NextResponse.next();
 	};
 
