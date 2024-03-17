@@ -10,10 +10,11 @@ import { UserRole } from "@/types/user.interface";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import acceptLanguage from "accept-language";
+import { TLanguages } from "@/app/i18n/types";
 
 acceptLanguage.languages(languages);
 
-const needToAttachSuffix = (request: NextRequest) => {
+const noLangSuffix = (request: NextRequest) => {
 	return (
 		!languages.some(loc => request.nextUrl.pathname.startsWith(`/${loc}`)) &&
 		!request.nextUrl.pathname.startsWith("/_next")
@@ -29,32 +30,55 @@ export async function middleware(request: NextRequest) {
 	const isPublicPage = !isCabinetPage && !isDashboardPage && !isLoginPage;
 
 	//
-	let lang;
+	let lang: TLanguages;
 	let langSuffix = "";
 	if (request.cookies.has(langCookieName))
-		lang = acceptLanguage.get(request.cookies.get(langCookieName)?.value);
-	if (!lang) lang = acceptLanguage.get(request.headers.get("Accept-Language"));
+		lang = acceptLanguage.get(
+			request.cookies.get(langCookieName)?.value,
+		) as TLanguages;
+	if (!lang!)
+		lang = acceptLanguage.get(
+			request.headers.get("Accept-Language"),
+		) as TLanguages;
 	if (!lang) lang = fallbackLng;
 
-	if (needToAttachSuffix(request)) {
+	if (noLangSuffix(request)) {
 		langSuffix = `/${lang}`;
-		if (isPublicPage) {
+	}
+
+	const next = (lang: TLanguages) => {
+		const requestLocale = request.nextUrl.pathname.split("/")?.[1];
+		if (noLangSuffix(request) && lang === fallbackLng) {
+			return NextResponse.rewrite(
+				new URL(`${langSuffix}${request.nextUrl.pathname}`, request.url),
+			);
+		}
+
+		if (noLangSuffix(request) && lang !== fallbackLng) {
 			return NextResponse.redirect(
 				new URL(`${langSuffix}${request.nextUrl.pathname}`, request.url),
 			);
 		}
-	}
-	//
+
+		if (!noLangSuffix(request) && requestLocale === fallbackLng) {
+			return NextResponse.redirect(
+				new URL(
+					`${request.nextUrl.pathname.slice(requestLocale.length + 1) || "/"}`,
+					request.url,
+				),
+			);
+		}
+
+		return NextResponse.next();
+	};
 
 	if (isPublicPage) {
-		return NextResponse.next();
+		return next(lang);
 	}
 
 	const role = await useServerUserRole();
-	// console.log("middleware role", role);
+	console.log("middleware role", role);
 	const isUser = role === UserRole.user;
-
-	// console.log(111);
 
 	if (role && isLoginPage) {
 		if (isUser) {
@@ -68,12 +92,7 @@ export async function middleware(request: NextRequest) {
 	}
 
 	if (isLoginPage) {
-		if (needToAttachSuffix(request)) {
-			return NextResponse.redirect(
-				new URL(`${langSuffix}${request.nextUrl.pathname}`, request.url),
-			);
-		}
-		return NextResponse.next();
+		return next(lang);
 	}
 
 	if (!role) {
@@ -81,7 +100,6 @@ export async function middleware(request: NextRequest) {
 			new URL(langSuffix + PUBLIC_PAGES.LOGIN, request.url),
 		);
 	}
-	// console.log(222);
 
 	if (isDashboardPage && isUser) {
 		return NextResponse.redirect(
@@ -102,16 +120,8 @@ export async function middleware(request: NextRequest) {
 	) {
 		return NextResponse.redirect(new URL(PUBLIC_PAGES[404], request.url));
 	}
-	// console.log("need to attach", needToAttachSuffix(request));
-	// console.log(333);
 
-	if (needToAttachSuffix(request)) {
-		return NextResponse.redirect(
-			new URL(`${langSuffix}${request.nextUrl.pathname}`, request.url),
-		);
-	}
-
-	return NextResponse.next();
+	return next(lang);
 }
 
 export const config = {

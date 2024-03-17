@@ -2,8 +2,8 @@
 const nextConfig = {
 	reactStrictMode: true,
 	env: {
-		SERVER_URL: process.env.SERVER_URL
-	}
-}
+		SERVER_URL: process.env.SERVER_URL,
+	},
+};
 
-export default nextConfig
+export default nextConfig;
