@@ -9,6 +9,12 @@ interface Resources {
 		Settings: "Settings";
 		"footer-text": "with love ...";
 	};
+	settings: {
+		name: "name";
+		title: "title";
+		password: "password";
+		phone: "phone";
+	};
 	translation: {
 		//default namespace
 	};
