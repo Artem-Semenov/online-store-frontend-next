@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage({ lang }: { lang: TLanguages }) {
-	const { t } = await useTranslation(lang);
+	const { t } = await useTranslation(lang, "home");
 	return (
 		<div>
 			<Heading>{t("helloWorld")}</Heading>

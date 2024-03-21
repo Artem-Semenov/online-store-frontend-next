@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page({ params: { lang } }: PropsWithLocale) {
-	return <Settings lang= {lang}/>;
+	return <Settings />;
 }

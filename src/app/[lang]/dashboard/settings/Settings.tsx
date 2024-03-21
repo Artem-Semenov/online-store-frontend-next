@@ -2,14 +2,19 @@
 import { useInitialData } from "@/app/[lang]/dashboard/settings/useInitialData";
 import { useUpdateProfile } from "@/app/[lang]/dashboard/settings/useUpdateProfile";
 import { validEmail } from "@/app/[lang]/login/valid-email";
+import { useTranslation } from "@/app/i18n/client";
+import { TLanguages } from "@/app/i18n/types";
 import Heading from "@/components/ui/Heading";
 import Loader from "@/components/ui/Loader/Loader";
 import Button from "@/components/ui/button/Button";
 import Field from "@/components/ui/input/Field";
+import { useLang } from "@/hooks/useLang";
 import { IUserUpdateData } from "@/services/user/types/user.types";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 export function Settings() {
+	const { t } = useTranslation(useLang(), "settings");
+
 	const { register, handleSubmit, reset, formState } = useForm<IUserUpdateData>(
 		{
 			mode: "onChange",
@@ -34,7 +39,7 @@ export function Settings() {
 	return (
 		<div>
 			<Heading>
-				Profile settings{" "}
+				{t("title")}{" "}
 				{isLoading && <Loader className="inline-block" color="gray" />}
 			</Heading>
 			<div>
@@ -57,7 +62,7 @@ export function Settings() {
 							<Field
 								{...register("name")}
 								type="text"
-								placeholder="Name"
+								placeholder={t("name")}
 								disabled={isLoading}
 							/>
 							<Field
@@ -68,7 +73,7 @@ export function Settings() {
 									},
 								})}
 								type="password"
-								placeholder="Password"
+								placeholder={t("password")}
 								error={errors.password?.message}
 								disabled={isLoading}
 							/>
@@ -82,13 +87,13 @@ export function Settings() {
 									},
 								})}
 								type="text"
-								placeholder="Phone"
+								placeholder={t("phone")}
 								error={errors.phone?.message}
 								disabled={isLoading}
 							/>
 						</div>
 						<Button type="submit" disabled={isPending} variant="orange">
-							Save
+							{t("save")}
 						</Button>
 					</div>
 				</form>

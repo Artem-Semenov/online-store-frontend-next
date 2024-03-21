@@ -14,6 +14,10 @@ interface Resources {
 		title: "title";
 		password: "password";
 		phone: "phone";
+		save: "save";
+	};
+	orders: {
+		title: "title";
 	};
 	translation: {
 		//default namespace
